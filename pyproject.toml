@@ -1,0 +1,74 @@
+[project]
+name = "matched"
+version = "2025.04.0"
+description = "Python package for matching students to projects."
+readme = "README.md"
+authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
+requires-python = ">=3.13"
+dependencies = [
+    "fakeitmakeit>=2024.11.0",
+    "pandas>=2.2.3",
+]
+license = "MIT"
+keywords = ["projects", "higher education"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Education",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+    "pytest-sugar>=1.0.0",
+    "pytest-xdist>=3.6.1",
+]
+
+[project.urls]
+Repository = "https://github.com/teachnology/matched"
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = [
+    "F",    # flake8
+    "E",    # pycodestyle
+    "W",    # pycodestyle (warnings)
+    "N",    # pep8-naming
+    "E501", # line too long - not enabled by default
+    "UP",   # pyupgrade
+    "I",    # isort
+    "D",    # pydocstyle
+    "PD",   # pandas-vet
+    "PL",   # pylint
+    "NPY",  # numpy
+    "RUF",  # ruff
+]
+ignore = [
+    "D100",    # Missing docstring in public module
+    "PLR2004", # Magic value used in comparison
+    "PLR0911", # Too many return statements
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["D"]
+"tests/*" = ["D"]
+
+[tool.coverage.run]
+omit = ["tests/*.py"]
+
+[tool.pytest.ini_options]
+addopts = "-v -n auto --doctest-modules --cov=matched --cov-report=html --cov-report=term"
