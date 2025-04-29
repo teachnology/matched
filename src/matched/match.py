@@ -2,6 +2,31 @@ import pandas as pd
 
 
 def match(choices, nmax):
+    """
+    Match students to projects.
+
+    The function iteratively allocates students to projects based on their choices, the
+    maximum number of students accepted per project and their mean mark. It ensures that
+    no project exceeds its maximum capacity and that students are allocated to their
+    preferred projects as much as possible.
+
+    Parameters
+    ----------
+    choices : pd.DataFrame
+        DataFrame containing the students' choices and their corresponding mean marks.
+        It should have the following columns: 'username', 'code', 'choice', and 'mean'.
+    nmax : pd.Series
+        Series containing the maximum number of students allowed for each project. The
+        index should be the project codes and the values should be the maximum
+        capacities.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the final allocations of students to projects. It will have
+        the following columns: 'username', 'code', and 'choice'.
+
+    """
     allocations = pd.Series({}, name="code")
 
     _original_choices = choices.copy()
