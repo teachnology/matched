@@ -1,2 +1,1 @@
-def hello() -> str:
-    return "Hello from matched!"
+from .match import match
