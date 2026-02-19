@@ -1,14 +1,11 @@
 [project]
 name = "matched"
-version = "2025.04.0"
+version = "2026.02.0"
 description = "Python package for matching students to projects."
 readme = "README.md"
 authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
 requires-python = ">=3.13"
-dependencies = [
-    "fakeitmakeit>=2024.11.0",
-    "pandas>=2.2.3",
-]
+dependencies = ["fakeitmakeit>=2025.10.1", "pandas>=3.0.1"]
 license = "MIT"
 keywords = ["projects", "higher education"]
 classifiers = [
