@@ -1,0 +1,15 @@
+username,code,choice,score,course
+gc48,code2,1,56.73,course1
+jq1239,code3,1,56.2,course2
+mz6952,code1,1,57.69,course1
+xeq483,code1,1,56.95,course1
+yzq85,code2,1,62.6,course2
+gc48,code3,2,56.73,course1
+jq1239,code1,2,56.2,course2
+yzq85,code1,4,62.6,course2  # duplicate
+mz6952,code3,2,57.69,course1
+xeq483,code3,2,56.95,course1
+yzq85,code3,2,62.6,course2
+mz6952,code2,3,57.69,course1
+yzq85,code1,3,62.6,course2
+xeq483,code3,3,56.95,course1  # duplicate

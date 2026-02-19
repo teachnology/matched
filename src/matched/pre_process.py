@@ -1,6 +1,3 @@
-import pandas as pd
-
-
 def deduplicate(choices):
     """
     Deduplicate student project choices.
