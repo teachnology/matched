@@ -6,22 +6,22 @@ def match(choices, nmax):
     Match students to projects.
 
     The function iteratively matches students to projects based on their choices, the
-    maximum number of students accepted per project, and their mean mark. It ensures
+    maximum number of students accepted per project, and their score. It ensures
     that no project exceeds its maximum capacity and that, for popular projects,
-    students with higher mean marks are given priority.
+    students with higher scores are given priority.
 
     Parameters
     ----------
     choices : pd.DataFrame
-        DataFrame containing the students' choices and their mean marks. It must have
+        DataFrame containing the students' choices and their scores. It must have
         the following columns:
 
         - ``username``: unique identifier for each student.
         - ``code``: project code the student selected.
         - ``choice``: rank of the preference (1 = first choice, 2 = second choice,
           etc.). Lower numbers take priority during allocation.
-        - ``mean``: the student's mean mark, used as a tiebreaker when a project is
-          oversubscribed (higher mean takes priority).
+        - ``score``: the student's score, used as a tiebreaker when a project is
+          oversubscribed (higher score takes priority).
     nmax : pd.Series
         Series containing the maximum number of students allowed for each project. The
         index should be the project code and the value should be the maximum capacity.
@@ -41,7 +41,7 @@ def match(choices, nmax):
 
     """
     # Basic input validation.
-    required_cols = {"username", "code", "choice", "mean"}
+    required_cols = {"username", "code", "choice", "score"}
     if missing_cols := required_cols - set(choices.columns):
         raise ValueError(f"'choices' is missing required columns: {missing_cols}")
 
@@ -73,10 +73,10 @@ def match(choices, nmax):
             # Retrieve maximum number of students that can be allocated to the project.
             nmax_ = nmax.loc[code]
 
-            # Get all students who selected the project and sort them by their mean mark
+            # Get all students who selected the project and sort them by their score
             # in descending order.
             df_ = current_round[current_round.code.eq(code)].sort_values(
-                by="mean", ascending=False
+                by="score", ascending=False
             )
 
             # Allocate students to the project as long as n < nmax.
