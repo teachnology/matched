@@ -121,3 +121,22 @@ def match(choices, nmax):
         )
         .set_index("username")
     )
+
+
+def shortlist(choices, code):
+    """
+    Return all students who selected the given project code, sorted by score descending.
+
+    Parameters
+    ----------
+    choices : pd.DataFrame
+        DataFrame with at least columns 'username', 'code', and 'score'.
+    code : str
+        Project code to filter by.
+
+    Returns
+    -------
+    pd.DataFrame
+        Subset of choices for the given project, sorted by score descending.
+    """
+    return choices[choices.code.eq(code)].sort_values(by="score", ascending=False)
