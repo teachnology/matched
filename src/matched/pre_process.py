@@ -23,3 +23,25 @@ def deduplicate(choices):
         .drop_duplicates(subset=["username", "code"], keep="first")
         .copy()
     )
+
+
+def filter_invalid_course(choices, nmax):
+    """
+    Remove invalid project choices based on course eligibility.
+
+    Parameters
+    ----------
+    choices : pd.DataFrame
+        DataFrame with at least columns 'username', 'code', and 'course'.
+    nmax : pd.DataFrame
+        DataFrame with project codes as index and boolean columns for each course (e.g.,
+        'course1', 'course2', ...), indicating project eligibility for each course.
+
+    Returns
+    -------
+    pd.DataFrame
+        Filtered choices DataFrame with only valid (course, project) pairs.
+    """
+    # For each row, check if the project is available to the student's course
+    mask = choices.apply(lambda row: nmax.loc[row.code, row.course], axis=1)
+    return choices[mask].copy()

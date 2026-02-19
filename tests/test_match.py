@@ -5,8 +5,8 @@ import pandas as pd
 from matched import match
 
 CWD = pathlib.Path(__file__).parent
-choices = pd.read_csv(CWD / "data" / "choices1.csv")
-nmax = pd.read_csv(CWD / "data" / "nmax1.csv", index_col=0).iloc[:, 0]
+choices = pd.read_csv(CWD / "data" / "choices1.csv", comment="#")
+nmax = pd.read_csv(CWD / "data" / "nmax1.csv", index_col=0, comment="#").iloc[:, 0]
 
 
 def test_match():

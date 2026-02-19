@@ -1,4 +1,4 @@
 code,nmax,course1,course2
 code1,1,True,True
-code2,2,False,True
-code3,3,True,False
+code2,2,True,False
+code3,3,False,True
