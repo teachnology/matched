@@ -1,5 +1,7 @@
 import pandas as pd
 
+from .pre_process import deduplicate
+
 
 def match(choices, nmax):
     """
@@ -51,13 +53,9 @@ def match(choices, nmax):
             f"{unknown_codes}"
         )
 
-    # Deduplicate (username, code) pairs, keeping the row with the lowest choice number,
-    # if any student selected the same project multiple times.
-    _original_choices = (
-        choices.sort_values("choice")
-        .drop_duplicates(subset=["username", "code"], keep="first")
-        .copy()  # copy to avoid modifying choices DataFrame outside of this function.
-    )
+    # Deduplicate (username, code) pairs, keeping the row with the lowest choice
+    # number, if any student selected the same project multiple times.
+    _original_choices = deduplicate(choices)
 
     # Store allocations in a dictionary.
     allocations = {}
@@ -111,17 +109,15 @@ def match(choices, nmax):
         name="code",
     )
 
-    # Retrieve the choice number for each allocated student for later data analysis.
-    def _choice(row):
-        if pd.isna(row.code):
-            return pd.NA
-
-        return _original_choices.loc[
-            _original_choices.username.eq(row.name)
-            & _original_choices.code.eq(row.code),
-            "choice",
-        ].item()
-
-    return allocations_series.to_frame().assign(
-        choice=lambda df_: df_.apply(_choice, axis=1)
+    # Retrieve the choice number for each allocated student by merging with the
+    # original choices. Unallocated students (NaN code) will have NaN for choice.
+    return (
+        allocations_series.to_frame()
+        .reset_index(names="username")
+        .merge(
+            _original_choices[["username", "code", "choice"]],
+            on=["username", "code"],
+            how="left",
+        )
+        .set_index("username")
     )
