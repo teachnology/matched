@@ -1,4 +1,10 @@
 from .match import match, shortlist
-from .pre_process import deduplicate, filter_invalid_course
+from .preprocess import deduplicate, filter_invalid_code, filter_invalid_course
 
-__all__ = ["deduplicate", "filter_invalid_course", "match", "shortlist"]
+__all__ = [
+    "deduplicate",
+    "filter_invalid_code",
+    "filter_invalid_course",
+    "match",
+    "shortlist",
+]

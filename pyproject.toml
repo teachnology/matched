@@ -28,7 +28,6 @@ dev = [
 [project.urls]
 Repository = "https://github.com/teachnology/matched"
 
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

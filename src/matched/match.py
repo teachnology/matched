@@ -139,4 +139,8 @@ def shortlist(choices, code):
     pd.DataFrame
         Subset of choices for the given project, sorted by score descending.
     """
-    return choices[choices.code.eq(code)].sort_values(by="score", ascending=False)
+    return (
+        choices[choices.code.eq(code)]
+        .sort_values(by="score", ascending=False)
+        .set_index("username")
+    )
