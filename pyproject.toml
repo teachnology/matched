@@ -1,13 +1,20 @@
 [project]
 name = "matched"
 version = "2026.02.0"
-description = "Python package for matching students to projects."
+description = "Student-project matching tool."
 readme = "README.md"
 authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
 requires-python = ">=3.13"
 dependencies = ["fakeitmakeit>=2025.10.1", "pandas>=3.0.1"]
 license = "MIT"
-keywords = ["projects", "higher education"]
+keywords = [
+    "projects",
+    "higher education",
+    "matching",
+    "allocation",
+    "assignment",
+    "optimization",
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
