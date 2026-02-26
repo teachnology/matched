@@ -1,7 +1,5 @@
 import pandas as pd
 
-from .pre_process import deduplicate
-
 
 def match(choices, nmax):
     """
@@ -53,9 +51,7 @@ def match(choices, nmax):
             f"{unknown_codes}"
         )
 
-    # Deduplicate (username, code) pairs, keeping the row with the lowest choice
-    # number, if any student selected the same project multiple times.
-    _original_choices = deduplicate(choices)
+    _original_choices = choices.copy()
 
     # Store allocations in a dictionary.
     allocations = {}
