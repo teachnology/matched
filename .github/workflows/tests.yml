@@ -1,6 +1,9 @@
 name: tests
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_call:
 
 jobs:
   tests:
@@ -24,7 +27,7 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install the project
-        run: uv sync --all-extras --dev --python ${{ matrix.python-version }}
+        run: uv sync --all-extras --dev --python ${{ matrix.python-version }} --locked
 
       - name: Run tests
         run: uv run pytest
