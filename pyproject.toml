@@ -37,8 +37,8 @@ dev = [
 Repository = "https://github.com/teachnology/matched"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.11.31,<0.12"]
+build-backend = "uv_build"
 
 [tool.ruff]
 extend-include = ["*.ipynb"]
