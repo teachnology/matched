@@ -5,41 +5,14 @@ on:
     types: [published]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v9.0.0
-        with:
-          enable-cache: true
-          python-version: "3.14"
-
-      - name: Install dependencies
-        run: uv sync --all-groups
-
-      - name: Run test suite
-        run: uv run pytest tests -v
+  tests:
+    uses: ./.github/workflows/tests.yml
 
   ruff:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v9.0.0
-
-      - name: Run ruff check
-        run: uvx ruff check .
-
-      - name: Run ruff format --check
-        run: uvx ruff format --check .
+    uses: ./.github/workflows/ruff.yml
 
   publish:
-    needs: [test, ruff]
+    needs: [tests, ruff]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
