@@ -87,5 +87,8 @@ convention = "numpy"
 [tool.coverage.run]
 omit = ["tests/*.py"]
 
+[tool.coverage.report]
+fail_under = 90
+
 [tool.pytest.ini_options]
 addopts = "-v -n auto --doctest-modules --cov=matched --cov-report=html --cov-report=term"
