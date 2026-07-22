@@ -93,7 +93,7 @@ def match(choices, nmax):
                     break
 
                 else:
-                    assert False, (
+                    raise AssertionError(
                         f"Project {code} has more than {nmax_} students allocated "
                         f"({n_allocated}). This should never happen."
                     )
