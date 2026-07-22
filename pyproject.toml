@@ -1,6 +1,6 @@
 [project]
 name = "matched"
-version = "2026.02.0"
+version = "2026.07.0"
 description = "Student-project matching tool."
 readme = "README.md"
 authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
