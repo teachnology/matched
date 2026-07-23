@@ -25,6 +25,8 @@ jobs:
         with:
           enable-cache: true
 
+      # No project Python setup needed: uvx runs ruff as a standalone tool,
+      # independent of .python-version.
       - name: Ruff check
         run: uvx ruff check --output-format=github .
 
