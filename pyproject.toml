@@ -7,6 +7,7 @@ authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
 requires-python = ">=3.13"
 dependencies = ["pandas>=3.0.1"]
 license = "MIT"
+license-files = ["LICENSE"]
 keywords = [
     "projects",
     "higher education",
@@ -24,12 +25,14 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Topic :: Education",
+    "Topic :: Scientific/Engineering",
 ]
 
 [dependency-groups]
 dev = [
     "fakeitmakeit>=2025.10.1",
     "ipykernel>=6.29.5",
+    "nbval>=0.11.0",
     "pytest>=8.3.5",
     "pytest-cov>=6.1.1",
     "pytest-randomly>=4.1.0",
@@ -39,6 +42,8 @@ dev = [
 
 [project.urls]
 Repository = "https://github.com/teachnology/matched"
+Issues = "https://github.com/teachnology/matched/issues"
+Changelog = "https://github.com/teachnology/matched/releases"
 
 [build-system]
 requires = ["uv_build>=0.11.31,<0.12"]
