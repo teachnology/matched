@@ -1,6 +1,8 @@
 # matched
 Python package for matching students to projects
 
+Documentation: https://teachnology.github.io/matched/
+
 ## Development setup
 
 This project uses [pre-commit](https://pre-commit.com) to run linting, formatting, and

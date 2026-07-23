@@ -1,0 +1,43 @@
+site_name: matched
+site_description: Python package for matching students to projects
+repo_url: https://github.com/teachnology/matched
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: { icon: material/brightness-7, name: Switch to dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: { icon: material/brightness-4, name: Switch to light mode }
+  features:
+    - navigation.tabs
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - The data: notebooks/01-data.ipynb
+      - Preprocessing: notebooks/02-preprocessing.ipynb
+      - The algorithm: notebooks/03-algorithm.ipynb
+  - API reference: reference.md
+
+plugins:
+  - search
+  - mkdocs-jupyter:
+      execute: true
+      include_source: true
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            show_source: false
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
