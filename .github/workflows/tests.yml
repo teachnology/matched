@@ -59,4 +59,4 @@ jobs:
         run: uv sync --all-extras --dev --python 3.14 --locked
 
       - name: Run notebooks
-        run: uv run pytest --nbval-lax --no-cov -n 0 -p no:randomly docs/*.ipynb
+        run: uv run pytest --nbval-lax --no-cov -n 0 -p no:randomly docs/notebooks/*.ipynb

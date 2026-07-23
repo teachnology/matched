@@ -85,9 +85,26 @@ enforced by ruff's `D` rules. Every public function needs `Parameters`,
 `Returns`, and (if applicable) `Raises` sections — see `match.py`/`preprocess.py`
 for the expected format.
 
+## Documentation
+
+- Built with MkDocs Material + `mkdocstrings` (API reference) + `mkdocs-jupyter`
+  (tutorial notebooks), config in `mkdocs.yml`. Deps live in the `docs`
+  dependency group (`uv sync --group docs`); build with
+  `uv run mkdocs build --strict`, preview with `uv run mkdocs serve`.
+- `docs/notebooks/` holds the getting-started tutorial notebooks (`01-data`,
+  `02-preprocessing`, `03-algorithm` — data shape, preprocessing, then the
+  allocation algorithm itself), each executed fresh at doc-build time (ruff
+  also lints notebooks via `extend-include = ["*.ipynb"]`).
+  `docs/notebooks/raw/` holds the real-shaped anonymized input CSVs they use.
+  Notebook outputs are stripped on commit by `nbstripout` — only the code
+  needs to be correct, not committed outputs.
+- `docs/index.md` (home) and `docs/reference.md` (API reference) are the
+  other two docs pages.
+- Deployed to GitHub Pages via `.github/workflows/docs.yml`: builds (and, on
+  `main`, deploys) on every push/PR using `actions/upload-pages-artifact` +
+  `actions/deploy-pages` — requires the repo's Pages source to be set to
+  "GitHub Actions" (Settings → Pages).
+
 ## Other
 
-- `docs/allocation.ipynb` is a working notebook (ruff lints notebooks too, via
-  `extend-include = ["*.ipynb"]`); `docs/raw/` holds real-shaped anonymized
-  input CSVs used there.
 - Requires Python >= 3.13 (`.python-version` pins the dev interpreter to 3.14).
