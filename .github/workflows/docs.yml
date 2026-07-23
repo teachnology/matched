@@ -19,12 +19,13 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v9.0.0
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
       - name: Install docs dependencies
+        # Python version comes from .python-version; uv installs it automatically.
         run: uv sync --group docs --no-default-groups --locked
 
       - name: Build docs

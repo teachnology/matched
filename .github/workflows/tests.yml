@@ -16,10 +16,6 @@ jobs:
   tests:
 
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.13", "3.14"]
 
     steps:
       - uses: actions/checkout@v7
@@ -31,32 +27,14 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Set up Python
-        run: uv python install ${{ matrix.python-version }}
+        # Version comes from .python-version; uv picks it up automatically.
+        run: uv python install
 
       - name: Install the project
-        run: uv sync --all-extras --dev --python ${{ matrix.python-version }} --locked
+        run: uv sync --all-extras --dev --locked
 
       - name: Run tests
         run: uv run pytest
-
-  notebook:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v9.0.0
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-
-      - name: Set up Python
-        run: uv python install 3.14
-
-      - name: Install the project
-        run: uv sync --all-extras --dev --python 3.14 --locked
 
       - name: Run notebooks
         run: uv run pytest --nbval-lax --no-cov -n 0 -p no:randomly docs/notebooks/*.ipynb
