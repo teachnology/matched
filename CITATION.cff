@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "matched"
-version: 2026.07.0
-date-released: "2026-07-22"
+version: 2026.07.1
+date-released: "2026-07-23"
 authors:
   - family-names: Beg
     given-names: Marijan

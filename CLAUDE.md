@@ -26,10 +26,6 @@ uv run pytest tests/test_match.py::TestMatch::test_match
 
 # Lint
 uv run ruff check .
-
-# Regenerate the synthetic test fixtures in tests/data/ (choices.csv, nmax.csv)
-# using fakeitmakeit; only creates files that don't already exist
-uv run python tests/data/_make.py
 ```
 
 Notes on the test setup:
@@ -41,49 +37,75 @@ Notes on the test setup:
 
 ## Code architecture
 
-The package has two small, focused modules with a clear pipeline relationship:
+The package has two small, focused modules with a clear pipeline relationship.
+The public API takes/returns plain Python `dict`/`list` values (no DataFrames,
+no bespoke classes) — internally, functions are free to convert to
+`pd.DataFrame`/`Series` for vectorized work where that's cleaner.
 
-- **`preprocess.py`** — cleans/filters a raw `choices` DataFrame before matching:
-  - `filter_invalid_code` — drop rows whose project `code` isn't in the known project list.
-  - `filter_invalid_course` — drop rows where the project isn't offered to the student's `course` (uses a `projects` DataFrame indexed by `code` with one boolean column per course).
-  - `deduplicate` — collapse repeated `(username, code)` picks, keeping the lowest (best) `choice` rank.
+- **`preprocess.py`** — cleans/filters a raw `choices` dict before matching:
+  - `filter_invalid_code(choices, nmax)` — drop codes not present in `nmax`
+    (i.e. not a known project).
+  - `filter_invalid_course(choices, courses, eligible_courses)` — drop codes
+    not eligible for the student's course.
+  - `deduplicate(choices)` — collapse repeated codes in a student's list,
+    keeping the first (best/lowest rank) occurrence.
 
-  These are designed to be composed with `.pipe(...)`, in the order
-  code-validity → course-validity → dedup (see `tests/test_preprocess.py`'s
-  `TestCombined` for the canonical pipeline).
+  These all take/return the `choices` dict shape, so they compose by
+  sequential reassignment, in the order code-validity → course-validity →
+  dedup (see `tests/test_preprocess.py`'s `TestCombined` for the canonical
+  pipeline):
 
-- **`match.py`** — the allocation algorithm, operating on the *cleaned* `choices` DataFrame:
-  - `match(choices, nmax)` — round-robin allocation by choice rank. Each round
-    processes the current best remaining choice for every unallocated student;
-    within a project, students are ranked by `score` (descending) and admitted
-    until `nmax` (a `pd.Series` indexed by project `code`) is reached, at which
-    point that project is removed from consideration for the rest of the
-    round. Returns a DataFrame indexed by `username` with `code`/`choice`
-    columns; unallocated students get `NaN` in both.
-  - `shortlist(choices, code)` — students who picked a given project, sorted
-    by score descending (independent of `match`, used for manual/human review
-    of a project's applicant pool).
+  ```python
+  cleaned = filter_invalid_code(choices, nmax)
+  cleaned = filter_invalid_course(cleaned, courses, eligible_courses)
+  cleaned = deduplicate(cleaned)
+  ```
 
-### Data contracts (DataFrame shapes used throughout)
+- **`match.py`** — the allocation algorithm, operating on the *cleaned*
+  `choices` dict:
+  - `match(choices, scores, nmax)` — round-robin allocation by choice rank
+    (rank implied by each student's list position). Each round processes the
+    current best remaining choice for every unallocated student; within a
+    project, students are ranked by `scores` (descending) and admitted until
+    `nmax` is reached, at which point that project is removed from
+    consideration for the rest of the round. Returns `{username: code}`
+    (allocated project code); unallocated students map to `None`. Internally
+    builds a "long" DataFrame (one row per (username, code)) to reuse
+    pandas' vectorized groupby/sort operations for the round-robin loop.
+  - `choice_rank(choices, allocated)` — given `match()`'s result, looks up
+    each allocated student's choice rank (`choices[username].index(code) +
+    1`), or `None` if unallocated. Decoupled from `match()` since not every
+    caller needs the rank.
+  - `shortlist(choices, scores, code)` — usernames who picked a given
+    project, sorted by score descending (independent of `match`, used for
+    manual/human review of a project's applicant pool).
 
-- `choices`: one row per student preference, columns `username`, `code`,
-  `choice` (1 = first preference), `score`; optionally `course` (required
-  only for `filter_invalid_course`).
-- `projects`: indexed by `code`, with an `nmax` column (capacity) and one
-  boolean column per course name (used only by `filter_invalid_course`).
-- `nmax` (as passed to `match`): a `pd.Series` indexed by project `code` —
-  typically `projects.nmax`.
+### Data contracts (plain dict/list shapes used throughout)
 
-`tests/data/choices.csv` and `tests/data/projects.csv` are the canonical
-fixtures illustrating these shapes (including `#`-commented rows documenting
-*why* each row is invalid/duplicate — read these comments when adding cases).
+- `choices`: `{username: [code, ...]}` — ordered list of project codes per
+  student; rank is implied by position (index 0 = first choice).
+- `scores`: `{username: score}`.
+- `courses`: `{username: course}` — the student's course (only needed for
+  `filter_invalid_course`).
+- `nmax`: `{code: max_capacity}` — passed to `filter_invalid_code` and
+  `match`.
+- `eligible_courses`: `{code: [course, ...]}` — courses eligible for each
+  project (only needed for `filter_invalid_course`).
+
+`tests/test_preprocess.py` and `tests/test_match.py` define these as inline
+dict literals in their fixtures — the canonical illustration of these
+shapes (including inline comments documenting *why* each entry is
+invalid/duplicate — read these when adding cases).
 
 ## Docstring style
 
 Numpy-style docstrings (`convention = "numpy"` under `[tool.ruff.lint.pydocstyle]`),
 enforced by ruff's `D` rules. Every public function needs `Parameters`,
 `Returns`, and (if applicable) `Raises` sections — see `match.py`/`preprocess.py`
-for the expected format.
+for the expected format. Every public function also has an `Examples` section with
+a doctest (`import matched` + `matched.func(...)`, per the project's call-style
+convention) — these run as part of the test suite via `--doctest-modules`, so a
+failure there is a real regression, not flaky notebook output.
 
 ## Documentation
 

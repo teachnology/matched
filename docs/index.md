@@ -13,20 +13,19 @@ uv add matched
 ## Quick example
 
 ```python
-import pandas as pd
-
 import matched
 
-choices = pd.read_csv("choices.csv")
-projects = pd.read_csv("projects.csv", index_col="code")
+choices = {"alice": ["code1", "code2"], "bob": ["code1"]}
+scores = {"alice": 90, "bob": 70}
+courses = {"alice": "course1", "bob": "course2"}
+nmax = {"code1": 1, "code2": 2}
+eligible_courses = {"code1": ["course1", "course2"], "code2": ["course1"]}
 
-choices = (
-    choices.pipe(matched.filter_invalid_code, valid_codes=projects.index)
-    .pipe(matched.filter_invalid_course, projects=projects)
-    .pipe(matched.deduplicate)
-)
+choices = matched.filter_invalid_code(choices, nmax)
+choices = matched.filter_invalid_course(choices, courses, eligible_courses)
+choices = matched.deduplicate(choices)
 
-allocation = matched.match(choices, nmax=projects.nmax)
+allocation = matched.match(choices, scores, nmax)
 ```
 
 See [Getting started](notebooks/01-data.ipynb) for a full worked example, or

@@ -1,6 +1,6 @@
 [project]
 name = "matched"
-version = "2026.07.0"
+version = "2026.07.1"
 description = "Student-project matching tool."
 readme = "README.md"
 authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
@@ -30,7 +30,6 @@ classifiers = [
 
 [dependency-groups]
 dev = [
-    "fakeitmakeit>=2025.10.1",
     "ipykernel>=6.29.5",
     "nbval>=0.11.0",
     "pytest>=8.3.5",
